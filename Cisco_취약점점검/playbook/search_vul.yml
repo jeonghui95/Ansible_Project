@@ -1,6 +1,39 @@
 ---
 
 - name: PWD 취약점 점검
-  host: all
+  host: cisco
   become: yes
+  strategy: free
+  connection: local
+  serial: 100
+  vars: 
+  
+    merged_value: []
+    system: 'Linux'
+    recap_fail: false
+
   tasks:
+
+    - name: include tasks
+      include_tasks: ../tasks/task.yml
+      register: result
+
+    - name: include vars
+      include_vars: ../vars/vars.yml
+
+    - name: set datalist
+      set_var:
+        data_list: "{{ data_list | default({}) | datalist: merged_value }}"
+      when: result.stdout is defined
+
+    - name: save db
+      fap.common.save_db:
+        content: "{{data_list}}"
+        protocol: http
+        hostname: "{{cisco.hostname}}"
+        report_type: "{{report}}"
+      delegate_to: localhost
+      when: data_list is defined
+
+
+
