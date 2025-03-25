@@ -1,0 +1,6 @@
+---
+
+- name: PWD 취약점 점검
+  host: all
+  become: yes
+  tasks:
