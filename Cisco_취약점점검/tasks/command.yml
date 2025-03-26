@@ -8,15 +8,28 @@
   register: command_result
 
 
+- name: debug
+  debug:
+    msg:
+      - " 지시어: {{ item.command }}"
+      - " 결과: {{ command_result.stdout}}"
+
+
+
 - name: filtering
-  shell: bin/bash/python3 ../vars/filter.py
+  shell: /usr/bin/python3 ../vars/filter.py
   environment:
     - hostname: "{{ cisco.hostname }}"
     - host: "{{cisco.hostname }}"
-    - content: "{{ command_result.stdout }}"
+    - total_item: "{{ command_result.stdout }}"
     - id: "{{ item.id }}"
     - message: "{{ item.message }}"
     - value: "{{item.value}}"
+    - report_type: "{{report}}"
+    - command: "{{ item.command }}"
+    - name: "{{ item.name }}"
+    - system: "{{system}}"
+
   delegate_to: localhost 
   register: data
   when: command_result.stdout is defined

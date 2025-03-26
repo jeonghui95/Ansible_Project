@@ -1,4 +1,4 @@
 ---
 
 command:
-  - { 'id': '32456' , 'value': 'int', 'command': 'sh run | in username ', 'message': '취약점 점검 완료'}
+  - { 'id': '32456' , 'value': 'int', 'command': 'sh run | in username ', 'message': '취약점 점검 완료', 'name': 'PWD 취약점 확인'}

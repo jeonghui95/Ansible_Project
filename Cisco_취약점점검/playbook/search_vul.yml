@@ -6,34 +6,45 @@
   strategy: free
   connection: local
   serial: 100
+  gather_facts: false
+  ignore_unreachable: true
+  ignore_errors: true
+
   vars: 
 
     merged_value: []
     system: 'Linux'
-    recap_fail: false
+    recap_fail: "false"
+    report_type: "PWD 취약점 점검"
 
   tasks:
-
-    - name: include tasks
-      include_tasks: ../tasks/task.yml
-      register: result
 
     - name: include vars
       include_vars: ../vars/vars.yml
 
+    - name: include tasks
+      include_tasks: ../tasks/task.yml
+
+
     - name: set datalist
-      set_var:
-        data_list: "{{ data_list | default({}) | datalist: merged_value }}"
-      when: result.stdout is defined
+      set_fact:
+        data_list: "{{ data_list | default({}) | combine({'data_list': merged_value}) }}"
+      delegate_to: localhost
+
 
     - name: save db
       fap.common.save_data:
         content: "{{data_list}}"
         protocol: http
         hostname: "{{cisco.hostname}}"
-        report_type: "{{report}}"
+        data_type: report
       delegate_to: localhost
+      register: result_value
       when: data_list is defined
 
+    - name: save failed
+      debug: 
+        msg: " failed reason is  {{ result_value }} "
+      when: result_value.stderr is defined
 
 
