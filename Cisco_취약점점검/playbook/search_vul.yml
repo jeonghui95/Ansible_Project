@@ -7,7 +7,7 @@
   connection: local
   serial: 100
   vars: 
-  
+
     merged_value: []
     system: 'Linux'
     recap_fail: false
@@ -27,7 +27,7 @@
       when: result.stdout is defined
 
     - name: save db
-      fap.common.save_db:
+      fap.common.save_data:
         content: "{{data_list}}"
         protocol: http
         hostname: "{{cisco.hostname}}"

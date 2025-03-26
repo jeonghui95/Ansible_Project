@@ -13,9 +13,10 @@
   environment:
     - hostname: "{{ cisco.hostname }}"
     - host: "{{cisco.hostname }}"
-    - content: "{{ command_result }}"
+    - content: "{{ command_result.stdout }}"
     - id: "{{ item.id }}"
     - message: "{{ item.message }}"
+    - value: "{{item.value}}"
   delegate_to: localhost 
   register: data
   when: command_result.stdout is defined
