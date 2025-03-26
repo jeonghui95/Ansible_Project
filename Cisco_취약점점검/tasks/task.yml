@@ -1,0 +1,6 @@
+---
+
+- name: filter
+  include_tasks: ./cli_command.yml
+  loop: "{{command}}"
+  when: ansible_network == 'network_cli'

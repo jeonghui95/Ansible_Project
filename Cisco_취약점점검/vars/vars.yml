@@ -1,0 +1,4 @@
+---
+
+command:
+  - { 'id': '32456' , 'command': 'sh run | in username ', 'message': '취약점 점검 완료'}

@@ -1,0 +1,31 @@
+---
+
+- name: cli_command
+  cli_command:
+    commands: "{{item.command}}"
+  ignore_unreachable: true
+  ignore_error: true
+  register: command_result
+
+
+- name: filtering
+  shell: bin/bash/python3 ../vars/filter.py
+  environment:
+    - hostname: "{{ cisco.hostname }}"
+    - host: "{{cisco.hostname }}"
+    - content: "{{ command_result }}"
+    - id: "{{ item.id }}"
+    - message: "{{ item.message }}"
+  delegate_to: localhost 
+  register: data
+  when: command_result.stdout is defined
+
+
+- name: merging
+  set_fact:
+    merged: "{{ merged | default({}) | from_json }}"
+
+- name: merged_value
+  set_fact: 
+    merged_value: "{{ merged_value + [merged] }}"
+
